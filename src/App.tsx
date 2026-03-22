@@ -171,7 +171,6 @@ const BANNERS = [
     title: 'CLAIM YOUR FREE $1',
     subtitle: '+ 50% DEPOSIT BONUS',
     description: 'ACEBET.COM',
-    cta: 'Claim Now',
     bg: 'from-yellow-600 to-orange-700'
   },
 ]
@@ -192,7 +191,7 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
               <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">🪂</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">BaseDrop</span>
+              <span className="text-xl font-bold text-gray-900">MemeBasePEPE.com</span>
             </div>
 
             <nav className="hidden md:flex items-center gap-1">
@@ -282,284 +281,6 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
   )
 }
 
-// Banner Component
-function Banner() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {BANNERS.map((banner, index) => (
-          <div
-            key={index}
-            className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${banner.bg} p-4 text-white cursor-pointer hover:scale-[1.02] hover:shadow-lg transition-all`}
-          >
-            <div className="relative z-10">
-              <p className="text-xs font-medium opacity-90">{banner.title}</p>
-              <h3 className="text-lg font-bold mt-1">{banner.subtitle}</h3>
-              <p className="text-xs opacity-80 mt-1">{banner.description}</p>
-              {banner.cta && (
-                <div className="mt-3 inline-flex items-center gap-1 text-xs font-medium bg-white/20 px-2 py-1 rounded">
-                  {banner.cta}
-                </div>
-              )}
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// Airdrop Card Component
-type AirdropItem = {
-  id: number
-  name: string
-  symbol: string
-  actions: string
-  confirmed: boolean
-  logo: string
-  hot?: boolean
-  hotValue?: number
-  potential?: boolean
-}
-
-function AirdropCard({ airdrop }: { airdrop: AirdropItem }) {
-  const claimAction = useClaimAction()
-
-  const handleClaim = () => {
-    if (claimAction?.disabled) return
-    claimAction?.claim()
-  }
-
-  return (
-    <div className="bg-white rounded-xl card-shadow hover:shadow-lg transition-all p-4">
-      <div className="flex items-start gap-4">
-        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-2xl font-bold text-gray-600">{airdrop.logo}</span>
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="font-bold text-gray-900">{airdrop.name}</h3>
-              <p className="text-sm text-gray-500 mt-1">
-                <span className="inline-flex items-center gap-1">
-                  <Zap className="w-3 h-3" />
-                  {airdrop.actions}
-                </span>
-              </p>
-            </div>
-            {airdrop.hot && (
-              <div className="flex items-center gap-1 text-red-500 text-sm font-medium">
-                <Flame className="w-4 h-4" />
-                {airdrop.hotValue}°
-              </div>
-            )}
-            {airdrop.potential && (
-              <div className="flex items-center gap-1 text-purple-500 text-sm font-medium">
-                <Sparkles className="w-4 h-4" />
-                Potential
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between mt-4">
-            {airdrop.confirmed ? (
-              <span className="badge-confirmed">Confirmed</span>
-            ) : (
-              <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded">Potential</span>
-            )}
-            <button 
-              onClick={handleClaim}
-              disabled={claimAction?.disabled}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-                claimAction?.disabled 
-                  ? 'bg-emerald-100 text-emerald-700 cursor-default' 
-                  : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md hover:shadow-lg'
-              }`}
-            >
-              Claim Airdrop
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Airdrop Section Component
-function AirdropSection({
-  title,
-  airdrops,
-  icon: Icon,
-}: {
-  title: string
-  airdrops: AirdropItem[]
-  icon: ComponentType<{ className?: string }>
-}) {
-  return (
-    <div className="bg-gray-50 rounded-2xl p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <Icon className="w-5 h-5 text-emerald-600" />
-        <h2 className="text-lg font-bold text-gray-900 uppercase tracking-wide">{title}</h2>
-      </div>
-      <div className="space-y-4">
-        {airdrops.map((airdrop) => (
-          <AirdropCard key={airdrop.id} airdrop={airdrop} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// Home Content Component
-function HomeContent() {
-  return (
-    <>
-      <Banner />
-      <Tokens />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <AirdropSection 
-            title="Latest Airdrops" 
-            airdrops={AIRDROPS.latest} 
-            icon={Zap}
-          />
-          <AirdropSection 
-            title="Hottest Airdrops" 
-            airdrops={AIRDROPS.hot} 
-            icon={Flame}
-          />
-          <AirdropSection 
-            title="Updated Airdrops" 
-            airdrops={AIRDROPS.updated} 
-            icon={Sparkles}
-          />
-        </div>
-      </div>
-
-    </>
-  )
-}
-
-// Hot Airdrops Page
-function HotAirdropsPage() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-          <Flame className="w-8 h-8 text-red-500" />
-          Hot Airdrops
-        </h1>
-        <p className="text-gray-600 mt-2">The most trending and popular airdrops right now</p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {AIRDROPS.hot.map((airdrop) => (
-          <AirdropCard key={airdrop.id} airdrop={airdrop} />
-        ))}
-        {AIRDROPS.latest.filter(a => a.hot).map((airdrop) => (
-          <AirdropCard key={airdrop.id} airdrop={airdrop} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// Potential Airdrops Page
-function PotentialAirdropsPage() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-          <Sparkles className="w-8 h-8 text-purple-500" />
-          Potential Airdrops
-        </h1>
-        <p className="text-gray-600 mt-2">Rumored and upcoming airdrops. Early participation may increase your chances.</p>
-      </div>
-      
-      <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-8">
-        <div className="flex items-start gap-3">
-          <Target className="w-5 h-5 text-purple-600 mt-0.5" />
-          <div>
-            <h3 className="font-semibold text-purple-900">How Potential Airdrops Work</h3>
-            <p className="text-sm text-purple-700 mt-1">
-              These projects haven't officially announced airdrops yet, but community speculation is high. 
-              Participate early to maximize your chances if an airdrop occurs.
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {AIRDROPS.potential.map((airdrop) => (
-          <AirdropCard key={airdrop.id} airdrop={airdrop} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// FAQ Page
-function FAQPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
-
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
-          <HelpCircle className="w-8 h-8 text-emerald-500" />
-          Frequently Asked Questions
-        </h1>
-        <p className="text-gray-600 mt-2">Everything you need to know about airdrops</p>
-      </div>
-
-      <div className="space-y-4">
-        {FAQ_DATA.map((faq, index) => (
-          <div 
-            key={index} 
-            className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
-          >
-            <button
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors"
-            >
-              <span className="font-semibold text-gray-900">{faq.question}</span>
-              {openIndex === index ? (
-                <ChevronUp className="w-5 h-5 text-emerald-500" />
-              ) : (
-                <ChevronDown className="w-5 h-5 text-gray-400" />
-              )}
-            </button>
-            {openIndex === index && (
-              <div className="px-5 pb-5">
-                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-12 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-xl p-6 text-center">
-        <h3 className="font-semibold text-gray-900 mb-2">Still have questions?</h3>
-        <p className="text-gray-600 text-sm mb-4">Contact us through any of our social channels</p>
-        <div className="flex items-center justify-center gap-4">
-          <button className="p-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
-            <Twitter className="w-5 h-5 text-blue-400" />
-          </button>
-          <button className="p-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
-            <MessageCircle className="w-5 h-5 text-emerald-500" />
-          </button>
-          <button className="p-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
-            <Mail className="w-5 h-5 text-gray-600" />
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // Contact Page
 function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
@@ -578,7 +299,7 @@ function ContactPage() {
           <Mail className="w-8 h-8 text-emerald-500" />
           Contact Us
         </h1>
-        <p className="text-gray-600 mt-2">Get in touch with the BaseDrop team</p>
+        <p className="text-gray-600 mt-2">Get in touch with the MemeBasePEPE.com team</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -676,6 +397,15 @@ function ContactPage() {
               <li className="flex items-start gap-2">
                 <HelpCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
                 Technical support
+              </li>
+              <li className="flex items-start gap-2">
+                <Mail className="w-4 h-4 text-emerald-500 mt-0.5" />
+                <a
+                  href="mailto:support@memebasepepe.com"
+                  className="text-emerald-600 hover:text-emerald-700 font-medium"
+                >
+                  support@memebasepepe.com
+                </a>
               </li>
             </ul>
           </div>
@@ -1069,6 +799,193 @@ function WalletTokens({ children }: { children: ReactNode }) {
       </div>
       {children}
     </ClaimContext.Provider>
+  )
+}
+
+function Banner() {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {BANNERS.map((banner, index) => (
+          <div
+            key={index}
+            className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${banner.bg} p-4 text-white cursor-pointer hover:scale-[1.02] hover:shadow-lg transition-all`}
+          >
+            <div className="relative z-10">
+              <p className="text-xs font-medium opacity-90">{banner.title}</p>
+              <h3 className="text-lg font-bold mt-1">{banner.subtitle}</h3>
+              <p className="text-xs opacity-80 mt-1">{banner.description}</p>
+              {banner.cta && (
+                <div className="mt-3 inline-flex items-center gap-1 text-xs font-medium bg-white/20 px-2 py-1 rounded">
+                  {banner.cta}
+                </div>
+              )}
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+type AirdropItem = {
+  id: number
+  name: string
+  symbol: string
+  actions: string
+  confirmed: boolean
+  logo: string
+  hot?: boolean
+  hotValue?: number
+  potential?: boolean
+}
+
+function AirdropCard({ airdrop }: { airdrop: AirdropItem }) {
+  const claimAction = useClaimAction()
+
+  const handleClaim = () => {
+    if (claimAction?.disabled) return
+    claimAction?.claim()
+  }
+
+  return (
+    <div className="bg-white rounded-xl card-shadow hover:shadow-lg transition-all p-4">
+      <div className="flex items-start gap-4">
+        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-2xl font-bold text-gray-600">{airdrop.logo}</span>
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="font-bold text-gray-900">{airdrop.name}</h3>
+              <p className="text-sm text-gray-500 mt-1">
+                <span className="inline-flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  {airdrop.actions}
+                </span>
+              </p>
+            </div>
+            {airdrop.hot && (
+              <div className="flex items-center gap-1 text-red-500 text-sm font-medium">
+                <Flame className="w-4 h-4" />
+                {airdrop.hotValue}°
+              </div>
+            )}
+            {airdrop.potential && (
+              <div className="flex items-center gap-1 text-purple-500 text-sm font-medium">
+                <Sparkles className="w-4 h-4" />
+                Potential
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between mt-4">
+            {airdrop.confirmed ? (
+              <span className="badge-confirmed">Confirmed</span>
+            ) : (
+              <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded">Potential</span>
+            )}
+            <button
+              onClick={handleClaim}
+              disabled={claimAction?.disabled}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                claimAction?.disabled
+                  ? 'bg-emerald-100 text-emerald-700 cursor-default'
+                  : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md hover:shadow-lg'
+              }`}
+            >
+              Claim Airdrop
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function HomeContent() {
+  return (
+    <>
+      <Banner />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {AIRDROPS.latest.map((airdrop) => (
+            <AirdropCard key={airdrop.id} airdrop={airdrop} />
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
+
+function HotAirdropsPage() {
+  return (
+    <>
+      <Banner />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {AIRDROPS.hot.map((airdrop) => (
+            <AirdropCard key={airdrop.id} airdrop={airdrop} />
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
+
+function PotentialAirdropsPage() {
+  return (
+    <>
+      <Banner />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {AIRDROPS.potential.map((airdrop) => (
+            <AirdropCard key={airdrop.id} airdrop={airdrop} />
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
+
+function FAQPage() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
+          <HelpCircle className="w-8 h-8 text-emerald-500" />
+          FAQ
+        </h1>
+        <p className="text-gray-600 mt-2">Answers to common questions about MemeBasePEPE.com</p>
+      </div>
+
+      <div className="space-y-4">
+        {FAQ_DATA.map((faq, index) => (
+          <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <button
+              onClick={() => setOpenIndex(openIndex === index ? null : index)}
+              className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors"
+            >
+              <span className="font-semibold text-gray-900">{faq.question}</span>
+              {openIndex === index ? (
+                <ChevronUp className="w-5 h-5 text-emerald-500" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-gray-400" />
+              )}
+            </button>
+            {openIndex === index && (
+              <div className="px-5 pb-5">
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
