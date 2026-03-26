@@ -3,8 +3,8 @@ import { ChevronDown, HelpCircle } from 'lucide-react'
 
 const faqs = [
   {
-    question: 'What is an airdrop?',
-    answer: 'An airdrop is a distribution of cryptocurrency tokens or coins to wallet addresses, usually for free. Projects use airdrops to reward early adopters, promote new tokens, or build community engagement.'
+    question: 'What is a drop?',
+    answer: 'A drop is a distribution of cryptocurrency tokens or coins to wallet addresses, usually for free. Projects use drops to reward early adopters, promote new tokens, or build community engagement.'
   },
   {
     question: 'How do I claim tokens?',

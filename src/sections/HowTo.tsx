@@ -13,14 +13,14 @@ export default function HowTo() {
       icon: CheckCircle,
       step: 2,
       title: 'Check Eligibility',
-      description: 'Our system automatically checks if your wallet is eligible for the airdrop. Eligibility is based on various factors including wallet age, activity, and engagement.',
+      description: 'Our system automatically checks if your wallet is eligible for the drop. Eligibility is based on various factors including wallet age, activity, and engagement.',
       tips: ['Most active wallets are eligible', 'New wallets may need to wait'],
     },
     {
       icon: Gift,
       step: 3,
       title: 'Select & Claim',
-      description: 'Choose which token you want to claim from the available options. Each wallet can claim one token type per airdrop period.',
+      description: 'Choose which token you want to claim from the available options. Each wallet can claim one token type per drop period.',
       tips: ['Compare token values', 'Consider future potential'],
     },
     {
@@ -87,10 +87,10 @@ export default function HowTo() {
         <div className="mt-12 p-6 bg-white/5 backdrop-blur-sm border border-green-500/30 rounded-2xl">
           <h3 className="text-xl font-bold mb-3 text-green-400">Important Notice</h3>
           <ul className="space-y-2 text-white/60">
-            <li>• Each wallet can only claim once per airdrop period</li>
+            <li>• Each wallet can only claim once per drop period</li>
             <li>• Make sure you have enough ETH for gas fees (we reimburse up to $5)</li>
             <li>• Claims are processed on a first-come, first-served basis</li>
-            <li>• Airdrop ends when supply runs out</li>
+            <li>• Drop ends when supply runs out</li>
           </ul>
         </div>
       </div>

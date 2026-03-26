@@ -48,7 +48,7 @@ export default function Hero() {
         </h1>
 
         <p className="text-xl md:text-2xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-          The ultimate meme coin airdrop platform on <span className="text-green-400 font-semibold">Base Network</span>. 
+          The ultimate meme coin drop platform on <span className="text-green-400 font-semibold">Base Network</span>. 
           Claim exclusive tokens and join the ribbiting community.
         </p>
 

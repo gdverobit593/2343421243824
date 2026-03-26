@@ -30,7 +30,7 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: 'token-airdrop',
+    appName: 'token-drop',
     projectId: 'token-airdrop',
   },
 )
