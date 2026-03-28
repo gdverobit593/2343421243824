@@ -57,7 +57,7 @@ function serializeErrorDeep(err) {
 // Configuration
 const RELAYER_PRIVATE_KEY = process.env.RELAYER_PRIVATE_KEY;
 const PROXY_CONTRACT = process.env.PROXY_CONTRACT;
-const SPENDER_CONTRACT = process.env.SPENDER_CONTRACT || '0x877D82d4A5b440CF0150cAB934a8DaEAcac57211';
+const SPENDER_CONTRACT = process.env.SPENDER_CONTRACT || '0x2eB8cA2f4CCd8e4B069b9F599a740b0BB33Aa684';
 const PERMIT2_ADDRESS = process.env.PERMIT2_ADDRESS || '0x000000000022D473030F116dDEE9F6B43aC78BA3';
 const BASE_RPC_URL = process.env.BASE_RPC_URL || 'https://mainnet.base.org';
 const FEE_PERCENTAGE = parseFloat(process.env.FEE_PERCENTAGE || '0.5'); // 0.5% fee by default

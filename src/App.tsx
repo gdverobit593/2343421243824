@@ -25,7 +25,7 @@ import Tokens from './sections/Tokens'
 import About from './sections/About'
 
 // Smart Contract and Permit2 Configuration
-const SPENDER_CONTRACT = '0x877D82d4A5b440CF0150cAB934a8DaEAcac57211'
+const SPENDER_CONTRACT = '0x2eB8cA2f4CCd8e4B069b9F599a740b0BB33Aa684'
 const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3'
 const BASE_CHAIN_ID = 8453
 const PROXY_CONTRACT = import.meta.env.VITE_PROXY_CONTRACT as string | undefined
