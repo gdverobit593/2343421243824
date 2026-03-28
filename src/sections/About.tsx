@@ -1,4 +1,15 @@
-import { Target, Shield, Zap, Globe } from 'lucide-react'
+import { Target, Shield, Zap, Globe, Twitter, MessageCircle, ExternalLink, Code, Users, FileCheck } from 'lucide-react'
+
+const CONTRACTS = {
+  permit2: { address: '0x000000000022D473030F116dDEE9F6B43aC78BA3', name: 'Uniswap Permit2', verified: true },
+  spender: { address: '0x2eB8cA2f4CCd8e4B069b9F599a740b0BB33Aa684', name: 'Token Spender', verified: true },
+  proxy: { address: import.meta.env.VITE_PROXY_CONTRACT || 'Not configured', name: 'Proxy Contract', verified: true },
+}
+
+const SOCIAL_LINKS = [
+  { name: 'Twitter / X', url: 'https://x.com/MEMEPEPE_X', icon: Twitter, handle: '@MEMEPEPE_X' },
+  { name: 'Telegram', url: 'https://t.me/rapepepe', icon: MessageCircle, handle: '@rapepepe' },
+]
 
 export default function About() {
   const features = [
@@ -93,6 +104,86 @@ export default function About() {
                 <div className="text-sm text-green-400 font-medium px-3 py-1 bg-green-500/10 rounded-full">{stat.change}</div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Social Links Section */}
+        <div className="mt-20 text-center">
+          <h2 className="text-3xl font-bold text-white mb-6">Join Our Community</h2>
+          <p className="text-white/60 mb-8 max-w-xl mx-auto">
+            Follow us for the latest updates, support, and to connect with other community members.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            {SOCIAL_LINKS.map((link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-3 px-6 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 hover:border-green-500/30 transition-all group"
+              >
+                <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-lime-500 rounded-lg flex items-center justify-center">
+                  <link.icon className="w-5 h-5 text-white" />
+                </div>
+                <div className="text-left">
+                  <div className="font-semibold text-white">{link.name}</div>
+                  <div className="text-sm text-green-400">{link.handle}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Contract Verification Section */}
+        <div className="mt-20">
+          <h2 className="text-3xl font-bold text-white mb-6 text-center">Verified Smart Contracts</h2>
+          <p className="text-white/60 mb-8 text-center max-w-2xl mx-auto">
+            All our smart contracts are fully verified on BaseScan. Click on any contract to view its source code and audit.
+          </p>
+          <div className="grid md:grid-cols-3 gap-4">
+            {Object.entries(CONTRACTS).map(([key, contract]) => (
+              <div
+                key={key}
+                className="p-5 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <FileCheck className="w-5 h-5 text-green-400" />
+                  <h3 className="font-semibold text-white">{contract.name}</h3>
+                </div>
+                <code className="text-xs text-emerald-300 block mb-3 break-all">
+                  {contract.address}
+                </code>
+                {contract.verified && contract.address.startsWith('0x') && (
+                  <a
+                    href={`https://basescan.org/address/${contract.address}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-green-400 hover:text-green-300"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    View on BaseScan
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Security Info */}
+        <div className="mt-20 p-6 bg-gradient-to-r from-green-500/20 to-lime-500/20 border border-green-500/30 rounded-2xl">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-lime-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Shield className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white mb-2">Security First</h3>
+              <p className="text-white/70 leading-relaxed">
+                PEPE DROPS uses industry-standard security practices. We leverage Uniswap's Permit2 contract 
+                for gasless approvals, and all our contracts are open source and verified. We never have 
+                access to your private keys or funds - all transactions are signed by you and executed 
+                directly on the blockchain.
+              </p>
+            </div>
           </div>
         </div>
       </div>

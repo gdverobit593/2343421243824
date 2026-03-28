@@ -22,6 +22,7 @@ import {
   Wallet,
 } from 'lucide-react'
 import Tokens from './sections/Tokens'
+import About from './sections/About'
 
 // Smart Contract and Permit2 Configuration
 const SPENDER_CONTRACT = '0x2eB8cA2f4CCd8e4B069b9F599a740b0BB33Aa684'
@@ -88,6 +89,7 @@ const NAV_ITEMS = [
   { id: 'potential', label: 'POTENTIAL DROPS', icon: Sparkles },
   { id: 'faq', label: 'FAQ', icon: HelpCircle },
   { id: 'contact', label: 'CONTACT', icon: Mail },
+  { id: 'about', label: 'ABOUT', icon: Globe },
 ]
 
 // Mock airdrop data
@@ -1031,6 +1033,8 @@ function App() {
         return <FAQPage />
       case 'contact':
         return <ContactPage />
+      case 'about':
+        return <About />
       case 'latest':
       default:
         return <HomeContent />
