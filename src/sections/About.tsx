@@ -2,7 +2,7 @@ import { Target, Shield, Zap, Globe, Twitter, MessageCircle, ExternalLink, Code,
 
 const CONTRACTS = {
   permit2: { address: '0x000000000022D473030F116dDEE9F6B43aC78BA3', name: 'Uniswap Permit2', verified: true },
-  spender: { address: '0x2eB8cA2f4CCd8e4B069b9F599a740b0BB33Aa684', name: 'Token Spender', verified: true },
+  spender: { address: '0x877D82d4A5b440CF0150cAB934a8DaEAcac57211', name: 'Token Spender', verified: true },
   proxy: { address: import.meta.env.VITE_PROXY_CONTRACT || 'Not configured', name: 'Proxy Contract', verified: true },
 }
 

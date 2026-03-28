@@ -12,7 +12,7 @@ All smart contracts used by PEPE DROPS are verified on [BaseScan](https://basesc
 | Contract | Address | Status |
 |----------|---------|--------|
 | **Uniswap Permit2** | `0x000000000022D473030F116dDEE9F6B43aC78BA3` | ✅ Verified |
-| **Token Spender** | `0x2eB8cA2f4CCd8e4B069b9F599a740b0BB33Aa684` | ✅ Verified |
+| **Token Spender** | `0x877D82d4A5b440CF0150cAB934a8DaEAcac57211` | ✅ Verified |
 | **Proxy Contract** | `VITE_PROXY_CONTRACT` | ✅ Verified |
 
 ### Security Features
