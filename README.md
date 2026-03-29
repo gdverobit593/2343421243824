@@ -24,8 +24,8 @@ All smart contracts used by PEPE DROPS are verified on [BaseScan](https://basesc
 ## 🔗 Official Links
 
 - **Website:** https://memebasepepe.com
-- **Twitter/X:** https://x.com/MEMEPEPE_X
-- **Telegram:** https://t.me/rapepepe
+- **Twitter/X:** https://x.com/memebasepepe
+- **Telegram:** https://t.me/memebasepepe
 - **GitHub:** https://github.com/gdverobit593/2343421243824
 
 ## ⚡ How It Works
@@ -74,8 +74,8 @@ All contracts are deployed on Base Network and verified on BaseScan.
 For support, questions, or partnership inquiries:
 
 - **Email:** support@memebasepepe.com
-- **Telegram:** https://t.me/rapepepe
-- **Twitter:** https://x.com/MEMEPEPE_X
+- **Telegram:** https://t.me/memebasepepe
+- **Twitter:** https://x.com/memebasepepe
 
 ## 🚀 Development
 

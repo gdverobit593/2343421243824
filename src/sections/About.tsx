@@ -7,8 +7,8 @@ const CONTRACTS = {
 }
 
 const SOCIAL_LINKS = [
-  { name: 'Twitter / X', url: 'https://x.com/MEMEPEPE_X', icon: Twitter, handle: '@MEMEPEPE_X' },
-  { name: 'Telegram', url: 'https://t.me/rapepepe', icon: MessageCircle, handle: '@rapepepe' },
+  { name: 'Twitter / X', url: 'https://x.com/memebasepepe', icon: Twitter, handle: '@memebasepepe' },
+  { name: 'Telegram', url: 'https://t.me/memebasepepe', icon: MessageCircle, handle: '@memebasepepe' },
 ]
 
 export default function About() {
