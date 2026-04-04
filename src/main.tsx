@@ -4,7 +4,17 @@ import { WagmiProvider, createConfig, http } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { base } from 'wagmi/chains'
 import { connectorsForWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { metaMaskWallet, coinbaseWallet, injectedWallet } from '@rainbow-me/rainbowkit/wallets'
+import {
+  metaMaskWallet,
+  coinbaseWallet,
+  injectedWallet,
+  walletConnectWallet,
+  rainbowWallet,
+  trustWallet,
+  argentWallet,
+  ledgerWallet,
+  okxWallet,
+} from '@rainbow-me/rainbowkit/wallets'
 import '@rainbow-me/rainbowkit/styles.css'
 import './index.css'
 import App from './App.tsx'
@@ -22,16 +32,28 @@ const queryClient = new QueryClient({
   },
 })
 
+const walletConnectProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID as string | undefined
+
 const connectors = connectorsForWallets(
   [
     {
       groupName: 'Wallets',
-      wallets: [metaMaskWallet, coinbaseWallet, injectedWallet],
+      wallets: [
+        metaMaskWallet,
+        coinbaseWallet,
+        rainbowWallet,
+        trustWallet,
+        argentWallet,
+        ledgerWallet,
+        okxWallet,
+        walletConnectWallet,
+        injectedWallet,
+      ],
     },
   ],
   {
     appName: 'token-drop',
-    projectId: 'token-airdrop',
+    projectId: walletConnectProjectId || 'token-airdrop',
   },
 )
 
