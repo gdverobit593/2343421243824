@@ -61,16 +61,8 @@ const config = createConfig({
   chains: [base],
   connectors,
   transports: {
-    [base.id]: http('https://mainnet.base.org', {
+    [base.id]: http('https://base-mainnet.g.alchemy.com/v2/demo', {
       batch: true,
-      onFetchRequest: (req) => {
-        // Prevent any unexpected RPC calls from the browser if they somehow slip through
-        if (req.url.includes('mainnet.base.org')) {
-          console.warn('Blocked direct RPC call to:', req.url);
-          // We can't easily block it here without returning a fake response, 
-          // but we can see what's triggering it in the console now.
-        }
-      }
     }),
   },
   pollingInterval: 120_000, // Increase polling interval to 2 minutes
