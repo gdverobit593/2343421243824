@@ -59,7 +59,7 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="bg-gradient-to-r from-green-500 to-lime-500 rounded-3xl p-1">
             <div className="bg-black/80 backdrop-blur-xl rounded-3xl p-8">
-              <h2 className="text-3xl font-bold mb-6 text-white">Our Mission</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-white">Our Mission</h2>
               <p className="text-white/70 leading-relaxed mb-6">
                 PEPE DROP was created with a simple mission: make meme token distribution fair, 
                 transparent, and accessible to everyone in the crypto community. We believe 
@@ -73,7 +73,7 @@ export default function About() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-3xl font-bold text-white mb-6">Key Statistics</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">Key Statistics</h2>
             {[
               { label: 'Total Users', value: '27,500+', change: '+12%' },
               { label: 'Tokens Distributed', value: '1.2M+', change: '8 types' },
@@ -96,7 +96,7 @@ export default function About() {
 
         {/* Social Links Section */}
         <div className="mt-20 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">Join Our Community</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">Join Our Community</h2>
           <p className="text-white/60 mb-8 max-w-xl mx-auto">
             Follow us for the latest updates, support, and to connect with other community members.
           </p>
@@ -123,7 +123,7 @@ export default function About() {
 
         {/* Contract Verification Section */}
         <div className="mt-20">
-          <h2 className="text-3xl font-bold text-white mb-6 text-center">Verified Smart Contracts</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">Verified Smart Contracts</h2>
           <p className="text-white/60 mb-8 text-center max-w-2xl mx-auto">
             All our smart contracts are fully verified on BaseScan. Click on any contract to view its source code and audit.
           </p>
