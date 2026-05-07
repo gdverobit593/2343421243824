@@ -632,8 +632,19 @@ app.post('/relay', async (req, res) => {
       console.log('  Allowance:', erc20Allowance.toString());
       console.log('  Required:', amount);
       console.log('  Has enough:', erc20Allowance >= BigInt(amount) ? '✅ YES' : '❌ NO - NEEDS APPROVAL');
+
+      if (erc20Allowance < BigInt(amount)) {
+        console.error('[DEBUG] BLOCKING: ERC20 allowance insufficient. User must approve token for Permit2 first.');
+        return res.status(400).json({
+          error: 'ERC20 allowance insufficient - token not approved for Permit2',
+          allowance: erc20Allowance.toString(),
+          required: amount,
+          token: tokenAddress,
+        });
+      }
     } catch (allowanceError) {
       console.error('[DEBUG] ERC20 allowance check error:', allowanceError.message);
+      // If we can't check allowance, don't block but warn
     }
 
     // Check ERC20 balance (TRANSFER_FROM_FAILED is often insufficient balance or token-level restriction)

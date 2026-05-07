@@ -687,7 +687,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
           // Poll relayer until allowance is confirmed on-chain (Base needs ~2-6s)
           let attempts = 0
-          const maxAttempts = 10
+          const maxAttempts = 30
           let confirmedAllowance = 0n
           while (attempts < maxAttempts) {
             await new Promise((r) => setTimeout(r, 2000))
@@ -707,7 +707,9 @@ function WalletTokens({ children }: { children: ReactNode }) {
           }
 
           if (confirmedAllowance < safeAmount) {
-            console.warn(`[PROFESSIONAL DEBUG] Allowance not confirmed after ${maxAttempts} attempts, proceeding anyway`)
+            console.error(`[PROFESSIONAL DEBUG] Allowance NOT confirmed after ${maxAttempts} attempts (${(maxAttempts * 2)}s). Aborting relay for ${token.symbol}.`)
+            setClaiming(false)
+            return
           }
 
           console.log(`${token.symbol} approve submitted (receipt wait in background)`) 
