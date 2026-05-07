@@ -657,7 +657,8 @@ function WalletTokens({ children }: { children: ReactNode }) {
           }
         } catch (e) {
           console.error(`[PROFESSIONAL DEBUG] Failed to check actual balance for ${token.symbol}:`, e)
-          continue
+          // If RPC provider fails (CORS/rate limit/UnknownRpcError), don't block the flow.
+          // Fall back to the balance fetched via relayer/UI.
         }
 
         // Step 1: Check and approve token for Permit2 if needed (use data from relayer)
