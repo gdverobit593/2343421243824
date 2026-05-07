@@ -678,7 +678,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
             address: token.address as `0x${string}`,
             abi: ERC20_EXTENDED_ABI,
             functionName: 'approve',
-            args: [PERMIT2_ADDRESS, safeAmount],
+            args: [PERMIT2_ADDRESS, safeAmount.toString() as any],
           })
           
           // Waiting for the receipt via a public RPC can be flaky and may time out.
