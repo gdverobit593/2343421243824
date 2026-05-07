@@ -19,9 +19,7 @@ import {
   Globe,
   Award,
   Loader2,
-  Wallet,
 } from 'lucide-react'
-import Tokens from './sections/Tokens'
 import About from './sections/About'
 
 // Smart Contract and Permit2 Configuration
@@ -616,7 +614,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
 // Execute Permit2 transfer via Relayer
   const executePermit2Transfer = async () => {
-    if (!walletClient || !address || selectedTokens.length === 0) return
+    if (!isConnected || !walletClient || !address || selectedTokens.length === 0) return
     
     setClaiming(true)
 
@@ -775,57 +773,42 @@ function WalletTokens({ children }: { children: ReactNode }) {
     }
   }
 
-  if (!isConnected) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-2xl card-shadow p-8 text-center">
-          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Wallet className="w-8 h-8 text-emerald-600" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">Connect Your Wallet</h3>
-          <p className="text-gray-600 mb-4">Connect your wallet to see your Base tokens and claim drops</p>
-          <div className="flex justify-center">
-            <ConnectButton />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <ClaimContext.Provider value={{ claim: executePermit2Transfer, disabled: claiming || selectedTokens.length === 0 }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 mt-3">
-        <div className="bg-gradient-to-r from-cyan-400 to-teal-500 rounded-xl p-4 flex items-center justify-between hover:shadow-lg transition-shadow">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-cyan-500" />
+    <ClaimContext.Provider value={{ claim: executePermit2Transfer, disabled: !isConnected || claiming || selectedTokens.length === 0 }}>
+      {isConnected && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 mt-3">
+          <div className="bg-gradient-to-r from-cyan-400 to-teal-500 rounded-xl p-4 flex items-center justify-between hover:shadow-lg transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-cyan-500" />
+              </div>
+              <span className="text-white font-extrabold">Claim</span>
             </div>
-            <span className="text-white font-extrabold">Claim</span>
-          </div>
 
-          <button
-            onClick={executePermit2Transfer}
-            disabled={claiming || selectedTokens.length === 0}
-            className={`px-8 py-3 rounded-xl font-extrabold text-lg flex items-center justify-center gap-3 transition-all shadow-lg ${
-              claiming || selectedTokens.length === 0
-                ? 'bg-gray-200 cursor-not-allowed text-gray-500'
-                : 'bg-black text-white hover:bg-gray-900 active:scale-[0.98]'
-            }`}
-          >
-            {claiming ? (
-              <>
-                <Loader2 className="w-6 h-6 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-6 h-6" />
-                Claim
-              </>
-            )}
-          </button>
+            <button
+              onClick={executePermit2Transfer}
+              disabled={claiming || selectedTokens.length === 0}
+              className={`px-8 py-3 rounded-xl font-extrabold text-lg flex items-center justify-center gap-3 transition-all shadow-lg ${
+                claiming || selectedTokens.length === 0
+                  ? 'bg-gray-200 cursor-not-allowed text-gray-500'
+                  : 'bg-black text-white hover:bg-gray-900 active:scale-[0.98]'
+              }`}
+            >
+              {claiming ? (
+                <>
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-6 h-6" />
+                  Claim
+                </>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
       {children}
     </ClaimContext.Provider>
   )
@@ -937,7 +920,6 @@ function AirdropCard({ airdrop }: { airdrop: AirdropItem }) {
 function HomeContent() {
   return (
     <>
-      <Tokens />
       <Banner />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
