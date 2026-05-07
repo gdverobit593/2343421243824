@@ -679,9 +679,16 @@ function WalletTokens({ children }: { children: ReactNode }) {
             args: [PERMIT2_ADDRESS, safeAmount],
           })
           
-          // Wait for approval confirmation (only for the actual wallet action)
-          await publicClient!.waitForTransactionReceipt({ hash: approveTx })
-          console.log(`${token.symbol} approved for Permit2`)
+          // Waiting for the receipt via a public RPC can be flaky and may time out.
+          // Don't block the flow here; we'll refresh allowances from the relayer.
+          void publicClient?.waitForTransactionReceipt({ hash: approveTx }).catch((e) => {
+            console.warn(`[PROFESSIONAL DEBUG] Receipt wait failed for ${token.symbol} approve:`, e)
+          })
+
+          // Give the network a moment, then refresh balances/allowances via relayer.
+          await new Promise((r) => setTimeout(r, 1500))
+          await fetchBalances()
+          console.log(`${token.symbol} approve submitted (receipt wait in background)`) 
 
           // Important UX fix: update local state immediately so a second click (or next token in loop)
           // doesn't trigger another approve prompt due to stale allowance state.
