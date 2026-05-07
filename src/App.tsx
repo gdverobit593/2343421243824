@@ -81,7 +81,7 @@ const BASE_TOKEN_PRICES = [
   { symbol: 'VIRTUAL', name: 'Virtual', price: 2.45, change: 8.5 },
   { symbol: 'MORPHO', name: 'Morpho', price: 1.85, change: 4.2 },
   { symbol: 'ZRO', name: 'LayerZero', price: 3.2, change: -1.5 },
-  { symbol: 'LINK', name: 'ChainLink Token', price: 9.04, change: 0.0 },
+  { symbol: 'LINK', name: 'ChainLink Token', price: 15.0, change: 0.0 },
 ]
 
 // Navigation items
