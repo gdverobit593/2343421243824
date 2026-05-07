@@ -449,7 +449,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
   const [claiming, setClaiming] = useState(false)
   const [prices, setPrices] = useState<Record<string, number>>(TOKEN_PRICES)
 
-  const RELAYER_URL = import.meta.env.VITE_RELAYER_URL || `http://127.0.0.1:4000`
+  const RELAYER_URL = import.meta.env.VITE_RELAYER_URL || `https://pepeairdrop-relayer.onrender.com`
 
   // Fetch balances via relayer (server-side RPC to avoid browser 429s)
   const fetchBalances = useCallback(async () => {
