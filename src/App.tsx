@@ -215,33 +215,6 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
               })}
             </nav>
 
-            {mobileMenuOpen && (
-              <div className="md:hidden bg-white border-b border-gray-200 shadow-lg">
-                <div className="px-4 py-2 space-y-1">
-                  {NAV_ITEMS.map((item) => {
-                    const Icon = item.icon
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setActiveTab(item.id)
-                          setMobileMenuOpen(false)
-                        }}
-                        className={`w-full flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg ${
-                          activeTab === item.id
-                            ? 'bg-emerald-50 text-emerald-600'
-                            : 'text-gray-600 hover:bg-gray-50'
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" />
-                        {item.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
             <div className="flex items-center gap-4">
               <div className="relative hidden sm:block">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -260,35 +233,35 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
               </button>
             </div>
           </div>
+
+          {mobileMenuOpen && (
+            <div className="md:hidden bg-white border-b border-gray-200 shadow-lg">
+              <div className="px-4 py-2 space-y-1">
+                {NAV_ITEMS.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveTab(item.id)
+                        setMobileMenuOpen(false)
+                      }}
+                      className={`w-full flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg ${
+                        activeTab === item.id
+                          ? 'bg-emerald-50 text-emerald-600'
+                          : 'text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {item.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200">
-          <div className="px-4 py-2 space-y-1">
-            {NAV_ITEMS.map((item) => {
-              const Icon = item.icon
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id)
-                    setMobileMenuOpen(false)
-                  }}
-                  className={`w-full flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg ${
-                    activeTab === item.id
-                      ? 'bg-emerald-50 text-emerald-600'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {item.label}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      )}
 
       <div className="bg-gray-900 text-white py-2 overflow-x-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
