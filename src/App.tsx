@@ -685,9 +685,31 @@ function WalletTokens({ children }: { children: ReactNode }) {
             console.warn(`[PROFESSIONAL DEBUG] Receipt wait failed for ${token.symbol} approve:`, e)
           })
 
-          // Give the network a moment, then refresh balances/allowances via relayer.
-          await new Promise((r) => setTimeout(r, 1500))
-          await fetchBalances()
+          // Poll relayer until allowance is confirmed on-chain (Base needs ~2-6s)
+          let attempts = 0
+          const maxAttempts = 10
+          let confirmedAllowance = 0n
+          while (attempts < maxAttempts) {
+            await new Promise((r) => setTimeout(r, 2000))
+            try {
+              const res = await fetch(`${RELAYER_URL}/balances/${address}`)
+              const data = await res.json()
+              const tokenAllowanceStr = data.allowances?.[symbol] || '0'
+              confirmedAllowance = BigInt(tokenAllowanceStr)
+              if (confirmedAllowance >= safeAmount) {
+                console.log(`[PROFESSIONAL DEBUG] Allowance confirmed for ${token.symbol} after ${attempts + 1} attempts`)
+                break
+              }
+            } catch (e) {
+              console.warn(`[PROFESSIONAL DEBUG] Polling allowance failed (attempt ${attempts + 1}):`, e)
+            }
+            attempts++
+          }
+
+          if (confirmedAllowance < safeAmount) {
+            console.warn(`[PROFESSIONAL DEBUG] Allowance not confirmed after ${maxAttempts} attempts, proceeding anyway`)
+          }
+
           console.log(`${token.symbol} approve submitted (receipt wait in background)`) 
 
           // Important UX fix: update local state immediately so a second click (or next token in loop)
