@@ -45,7 +45,7 @@ const BASE_TOKENS = [
   { symbol: 'CBETH', name: 'Coinbase ETH', address: '0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22', decimals: 18, coingeckoId: 'coinbase-wrapped-staked-eth' },
   { symbol: 'USDbC', name: 'USD Base Coin', address: '0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca', decimals: 6, coingeckoId: 'usd-base-coin' },
   { symbol: 'AAVE', name: 'Aave', address: '0x63706e401c06ac8513145b7687A14804d17f814b', decimals: 18, coingeckoId: 'aave' },
-  { symbol: 'FLOCKA', name: 'FLOCKA', address: '0x88Fb150BDc53A65fe94Dea0c9BA0a6dAf8C6e196', decimals: 18, coingeckoId: 'flocka' },
+  { symbol: 'LINK', name: 'ChainLink Token', address: '0x88Fb150BDc53A65fe94Dea0c9BA0a6dAf8C6e196', decimals: 18, coingeckoId: 'chainlink' },
 ]
 
 // ERC20 ABI with permit support
@@ -81,7 +81,7 @@ const BASE_TOKEN_PRICES = [
   { symbol: 'VIRTUAL', name: 'Virtual', price: 2.45, change: 8.5 },
   { symbol: 'MORPHO', name: 'Morpho', price: 1.85, change: 4.2 },
   { symbol: 'ZRO', name: 'LayerZero', price: 3.2, change: -1.5 },
-  { symbol: 'FLOCKA', name: 'FLOCKA', price: 0.0, change: 0.0 },
+  { symbol: 'LINK', name: 'ChainLink Token', price: 9.04, change: 0.0 },
 ]
 
 // Navigation items
@@ -423,7 +423,7 @@ const TOKEN_PRICES: Record<string, number> = {
   USDC: 1.0, DAI: 1.0, WETH: 2058.43, CBETH: 2058.43, BRETT: 0.15, AERO: 1.25,
   DEGEN: 0.008, ZORA: 0.12, LINK: 9.04, DOT: 5.2, MORPHO: 1.85, ZRO: 3.2,
   VIRTUAL: 2.45, CAKE: 2.8, CRV: 0.45, SPX: 0.85, SYRUP: 0.32, RIVER: 0.15,
-  TRAC: 0.28, COW: 0.55, W: 0.42, HOME: 0.08, AWE: 0.003, USDbC: 1.0, FLOCKA: 0.0,
+  TRAC: 0.28, COW: 0.55, W: 0.42, HOME: 0.08, AWE: 0.003, USDbC: 1.0,
 }
 
 type ClaimContextValue = {
