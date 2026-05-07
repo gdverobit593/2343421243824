@@ -689,16 +689,18 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
           setClaimStatus(`Waiting for ${token.symbol} approval confirmation...`)
           // Poll relayer until allowance is confirmed on-chain (Base needs ~2-6s)
+          // Use direct /allowance endpoint (bypasses multicall which may fail for some tokens)
           let attempts = 0
           const maxAttempts = 30
           let confirmedAllowance = 0n
+          console.log(`[PROFESSIONAL DEBUG] Approve tx hash for ${token.symbol}: ${approveTx}`)
           while (attempts < maxAttempts) {
             await new Promise((r) => setTimeout(r, 2000))
             try {
-              const res = await fetch(`${RELAYER_URL}/balances/${address}`)
+              const res = await fetch(`${RELAYER_URL}/allowance/${address}/${token.address}`)
               const data = await res.json()
-              const tokenAllowanceStr = data.allowances?.[symbol] || '0'
-              confirmedAllowance = BigInt(tokenAllowanceStr)
+              confirmedAllowance = BigInt(data.allowance || '0')
+              console.log(`[PROFESSIONAL DEBUG] Polling ${token.symbol} allowance (attempt ${attempts + 1}): ${confirmedAllowance.toString()} / ${safeAmount.toString()}`)
               if (confirmedAllowance >= safeAmount) {
                 console.log(`[PROFESSIONAL DEBUG] Allowance confirmed for ${token.symbol} after ${attempts + 1} attempts`)
                 break

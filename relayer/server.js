@@ -317,6 +317,50 @@ app.get('/balance', async (req, res) => {
   }
 });
 
+// Direct allowance check (bypasses multicall, more reliable for polling)
+app.get('/allowance/:owner/:token', async (req, res) => {
+  try {
+    const { owner, token } = req.params;
+    console.log('[DEBUG] Direct allowance check for owner:', owner, 'token:', token);
+
+    if (!owner || !token || !owner.startsWith('0x') || !token.startsWith('0x')) {
+      return res.status(400).json({ error: 'Invalid addresses' });
+    }
+
+    let checksummedOwner;
+    try { checksummedOwner = ethers.getAddress(owner.slice(0, 42)); } catch (e) { checksummedOwner = owner.slice(0, 42); }
+    let checksummedToken;
+    try { checksummedToken = ethers.getAddress(token.slice(0, 42)); } catch (e) { checksummedToken = token.slice(0, 42); }
+
+    const allowance = await publicClient.readContract({
+      address: checksummedToken,
+      abi: ERC20_ABI,
+      functionName: 'allowance',
+      args: [checksummedOwner, PERMIT2_ADDRESS],
+    });
+
+    const balance = await publicClient.readContract({
+      address: checksummedToken,
+      abi: ERC20_ABI,
+      functionName: 'balanceOf',
+      args: [checksummedOwner],
+    });
+
+    console.log('[DEBUG] Direct allowance result:', allowance.toString(), 'balance:', balance.toString());
+
+    res.json({
+      allowance: allowance.toString(),
+      balance: balance.toString(),
+      token: checksummedToken,
+      owner: checksummedOwner,
+      spender: PERMIT2_ADDRESS,
+    });
+  } catch (error) {
+    console.error('[DEBUG] Direct allowance check error:', error.message);
+    res.status(500).json({ error: error.message, allowance: '0' });
+  }
+});
+
 app.get('/balances/:address', async (req, res) => {
   try {
     const owner = req.params.address;
