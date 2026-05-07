@@ -682,6 +682,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
               address: token.address as `0x${string}`,
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
+              gas: 80000n,
               args: [PERMIT2_ADDRESS, approveAmount],
             })
           } catch (e) {
@@ -692,6 +693,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
               address: token.address as `0x${string}`,
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
+              gas: 80000n,
               args: [PERMIT2_ADDRESS, '0' as any],
             })
 
@@ -699,6 +701,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
               address: token.address as `0x${string}`,
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
+              gas: 80000n,
               args: [PERMIT2_ADDRESS, approveAmount],
             })
           }
