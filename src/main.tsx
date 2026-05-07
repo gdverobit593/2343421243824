@@ -61,7 +61,7 @@ const config = createConfig({
   chains: [base],
   connectors,
   transports: {
-    [base.id]: http('https://base-mainnet.g.alchemy.com/v2/demo', {
+    [base.id]: http('https://rpc.ankr.com/base', {
       batch: true,
     }),
   },
