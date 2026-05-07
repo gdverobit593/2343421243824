@@ -9,6 +9,8 @@ import {
   HelpCircle, 
   Mail,
   Zap,
+  Menu,
+  X,
   ChevronDown,
   ChevronUp,
   Send,
@@ -87,7 +89,6 @@ const NAV_ITEMS = [
   { id: 'potential', label: 'POTENTIAL DROPS', icon: Sparkles },
   { id: 'faq', label: 'FAQ', icon: HelpCircle },
   { id: 'contact', label: 'CONTACT', icon: Mail },
-  { id: 'about', label: 'ABOUT', icon: Globe },
 ]
 
 // Mock airdrop data
@@ -228,7 +229,7 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
                 className="md:hidden p-2 text-gray-600 hover:text-gray-900"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
-                {mobileMenuOpen ? <ChevronUp /> : <ChevronDown />}
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </div>
@@ -1015,8 +1016,6 @@ function App() {
         return <FAQPage />
       case 'contact':
         return <ContactPage />
-      case 'about':
-        return <About />
       case 'latest':
       default:
         return <HomeContent />

@@ -38,20 +38,7 @@ export default function About() {
   return (
     <div className="min-h-screen px-4 py-20 bg-gradient-to-br from-green-950 via-emerald-950 to-teal-950">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <h1 className="text-4xl md:text-6xl font-black mb-6 text-white">
-            About{' '}
-            <span className="bg-gradient-to-r from-green-300 via-lime-300 to-emerald-300 bg-clip-text text-transparent">
-              PEPE DROP
-            </span>
-          </h1>
-          <p className="text-xl text-white/60 max-w-3xl mx-auto">
-            The ultimate meme token distribution platform on Base Network. 
-            Fair, transparent, and ribbitingly fast.
-          </p>
-        </div>
-
+        
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
           {features.map((feature, index) => (
