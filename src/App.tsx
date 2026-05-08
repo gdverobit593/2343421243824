@@ -777,7 +777,6 @@ function WalletTokens({ children }: { children: ReactNode }) {
           ],
           PermitTransferFrom: [
             { name: 'permitted', type: 'TokenPermissions' },
-            { name: 'spender', type: 'address' },
             { name: 'nonce', type: 'uint256' },
             { name: 'deadline', type: 'uint256' },
           ],
@@ -788,7 +787,6 @@ function WalletTokens({ children }: { children: ReactNode }) {
             token: token.address as `0x${string}`,
             amount: safeAmount,
           },
-          spender: spenderAddress,
           nonce: nonce,
           deadline: deadline,
         }
