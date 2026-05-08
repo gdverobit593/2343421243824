@@ -489,8 +489,8 @@ app.post('/relay', async (req, res) => {
     console.log('\n=== RELAY REQUEST ===');
     const { tokenAddress, owner, amount, nonce, deadline, signature } = req.body;
 
-    const useProxy = Boolean(PROXY_CONTRACT && String(PROXY_CONTRACT).trim());
-    const spenderAddress = useProxy ? PROXY_CONTRACT : account.address;
+    const useProxy = false; // DISABLED: Proxy causes InvalidSigner error with Permit2
+    const spenderAddress = account.address;
 
     console.log('Token:', tokenAddress);
     console.log('Owner:', owner);
