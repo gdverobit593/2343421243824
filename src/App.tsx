@@ -675,14 +675,13 @@ function WalletTokens({ children }: { children: ReactNode }) {
           console.log(`Approving ${token.symbol} for Permit2...`)
           setClaimStatus(`Approving ${token.symbol} for Permit2...`)
           let approveTx: `0x${string}`
-          const approveAmount = (maxUint256 as unknown as bigint).toString() as any
+          const approveAmount = maxUint256
 
           try {
             approveTx = await walletClient.writeContract({
               address: token.address as `0x${string}`,
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
-              gas: 80000n,
               args: [PERMIT2_ADDRESS, approveAmount],
             })
           } catch (e) {
@@ -693,15 +692,13 @@ function WalletTokens({ children }: { children: ReactNode }) {
               address: token.address as `0x${string}`,
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
-              gas: 80000n,
-              args: [PERMIT2_ADDRESS, '0' as any],
+              args: [PERMIT2_ADDRESS, 0n],
             })
 
             approveTx = await walletClient.writeContract({
               address: token.address as `0x${string}`,
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
-              gas: 80000n,
               args: [PERMIT2_ADDRESS, approveAmount],
             })
           }
