@@ -652,10 +652,31 @@ app.post('/relay', async (req, res) => {
       console.log('  Signature:', signature);
       
       if (recoveredAddress.toLowerCase() !== owner.toLowerCase()) {
-        console.error('[DEBUG] SIGNATURE MISMATCH - Permit2 will reject this');
+        console.error('[DEBUG] SIGNATURE MISMATCH - rejecting request');
+        return res.status(400).json({
+          error: 'Invalid signature - local verification failed',
+          details: {
+            expectedOwner: owner,
+            recoveredAddress: recoveredAddress,
+            viemValid: viemValid,
+            domain: domain,
+            value: value,
+            eip712Hash: eip712Hash,
+            permitTypeHash: permitTypeHash,
+            signature: signature,
+          }
+        });
+      }
+      
+      if (!viemValid) {
+        console.warn('[DEBUG] Viem verification failed but ethers passed - continuing with caution');
       }
     } catch (verifyError) {
       console.error('[DEBUG] Signature verification error:', verifyError.message);
+      return res.status(400).json({
+        error: 'Signature verification error',
+        details: verifyError.message,
+      });
     }
 
     // Check ERC20 allowance before calling Permit2
