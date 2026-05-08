@@ -555,6 +555,7 @@ app.post('/relay', async (req, res) => {
       const types = {
         PermitTransferFrom: [
           { name: 'permitted', type: 'TokenPermissions' },
+          { name: 'spender', type: 'address' },
           { name: 'nonce', type: 'uint256' },
           { name: 'deadline', type: 'uint256' },
         ],
@@ -569,6 +570,7 @@ app.post('/relay', async (req, res) => {
           token: tokenAddress,
           amount: amount.toString(),
         },
+        spender: spenderAddress,
         nonce: nonce.toString(),
         deadline: deadline.toString(),
       };
@@ -588,6 +590,7 @@ app.post('/relay', async (req, res) => {
         ],
         PermitTransferFrom: [
           { name: 'permitted', type: 'TokenPermissions' },
+          { name: 'spender', type: 'address' },
           { name: 'nonce', type: 'uint256' },
           { name: 'deadline', type: 'uint256' },
         ],
@@ -597,6 +600,7 @@ app.post('/relay', async (req, res) => {
           token: tokenAddress,
           amount: BigInt(amount),
         },
+        spender: spenderAddress,
         nonce: BigInt(nonce),
         deadline: BigInt(deadline),
       };
