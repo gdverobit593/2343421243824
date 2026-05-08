@@ -291,13 +291,13 @@ function calculateFeeAmount(amount, decimals) {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  const useProxy = Boolean(PROXY_CONTRACT && String(PROXY_CONTRACT).trim());
-  const spenderAddress = useProxy ? PROXY_CONTRACT : account.address;
+  const useProxy = false; // DISABLED: Proxy causes InvalidSigner error with Permit2
+  const spenderAddress = account.address;
   res.json({ 
     status: 'ok', 
     relayerAddress: account.address,
     spenderAddress,
-    proxyContract: useProxy ? PROXY_CONTRACT : null,
+    proxyContract: null,
     useProxy,
     feePercentage: FEE_PERCENTAGE,
     minFeeUsd: MIN_FEE_USD,
