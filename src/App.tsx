@@ -45,7 +45,6 @@ const BASE_TOKENS = [
   { symbol: 'CBETH', name: 'Coinbase ETH', address: '0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22', decimals: 18, coingeckoId: 'coinbase-wrapped-staked-eth' },
   { symbol: 'USDbC', name: 'USD Base Coin', address: '0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca', decimals: 6, coingeckoId: 'usd-base-coin' },
   { symbol: 'AAVE', name: 'Aave', address: '0x63706e401c06ac8513145b7687A14804d17f814b', decimals: 18, coingeckoId: 'aave' },
-  { symbol: 'LINK', name: 'ChainLink Token', address: '0x88Fb150BDc53A65fe94Dea0c9BA0a6dAf8C6e196', decimals: 18, coingeckoId: 'chainlink' },
 ]
 
 // ERC20 ABI with permit support
