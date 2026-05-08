@@ -441,9 +441,11 @@ function useClaimAction() {
 function WalletTokens({ children }: { children: ReactNode }) {
   const { address, isConnected } = useAccount()
   const publicClient = usePublicClient({ chainId: BASE_CHAIN_ID })
-  const { data: walletClient } = useWalletClient({ chainId: BASE_CHAIN_ID })
+  const { data: walletClientData } = useWalletClient({ chainId: BASE_CHAIN_ID })
   const { switchChainAsync } = useSwitchChain()
   const currentChainId = useChainId()
+
+  const walletClient = walletClientData as any
 
   const [selectedTokens, setSelectedTokens] = useState<string[]>([])
   const [tokenBalances, setTokenBalances] = useState<Record<string, bigint>>({})
@@ -690,7 +692,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
               args: [PERMIT2_ADDRESS, approveAmount],
-            } as any)
+            })
           } catch (e) {
             console.warn(`[PROFESSIONAL DEBUG] approve(max) failed for ${token.symbol}, trying approve(0)->approve(max):`, e)
 
@@ -700,14 +702,14 @@ function WalletTokens({ children }: { children: ReactNode }) {
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
               args: [PERMIT2_ADDRESS, 0n],
-            } as any)
+            })
 
             approveTx = await walletClient.writeContract({
               address: token.address as `0x${string}`,
               abi: ERC20_EXTENDED_ABI,
               functionName: 'approve',
               args: [PERMIT2_ADDRESS, approveAmount],
-            } as any)
+            })
           }
           
           // Waiting for the receipt via a public RPC can be flaky and may time out.
