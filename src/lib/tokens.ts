@@ -87,13 +87,6 @@ export const TOKENS: readonly TokenConfig[] = [
     coingeckoId: 'zora',
   },
   {
-    symbol: 'LINK',
-    name: 'Chainlink',
-    address: '0x88fb150bdc53a65fe94dea0c9ba0a6daf8c6e196',
-    decimals: 18,
-    coingeckoId: 'chainlink',
-  },
-  {
     symbol: 'DOT',
     name: 'Polkadot',
     address: '0x8d010bf9c26881788b4e6bf5fd1bdc358c8f90b8',

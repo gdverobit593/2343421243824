@@ -17,6 +17,7 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 import '@rainbow-me/rainbowkit/styles.css'
 import './index.css'
+import './i18n'
 import App from './App.tsx'
 
 const queryClient = new QueryClient({

