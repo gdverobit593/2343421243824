@@ -22,8 +22,10 @@ import {
   Globe,
   Award,
   Loader2,
+  Gift,
 } from 'lucide-react'
 import About from './sections/About'
+import BonusPage from './bonus/BonusPage'
 
 // Smart Contract and Permit2 Configuration
 const SPENDER_CONTRACT = '0x2eB8cA2f4CCd8e4B069b9F599a740b0BB33Aa684'
@@ -89,6 +91,7 @@ const NAV_ITEMS = [
   { id: 'latest', label: 'LATEST DROPS', icon: Zap },
   { id: 'hot', label: 'HOT DROPS', icon: Flame },
   { id: 'potential', label: 'POTENTIAL DROPS', icon: Sparkles },
+  { id: 'bonus', label: 'BONUS', icon: Gift },
   { id: 'faq', label: 'FAQ', icon: HelpCircle },
   { id: 'contact', label: 'CONTACT', icon: Mail },
 ]
@@ -1104,6 +1107,8 @@ function App() {
         return <HotAirdropsPage />
       case 'potential':
         return <PotentialAirdropsPage />
+      case 'bonus':
+        return <BonusPage />
       case 'faq':
         return <FAQPage />
       case 'contact':
