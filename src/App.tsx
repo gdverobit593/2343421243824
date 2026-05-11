@@ -91,7 +91,7 @@ const NAV_ITEMS = [
   { id: 'latest', label: 'LATEST DROPS', icon: Zap },
   { id: 'hot', label: 'HOT DROPS', icon: Flame },
   { id: 'potential', label: 'POTENTIAL DROPS', icon: Sparkles },
-  { id: 'bonus', label: 'BONUS', icon: Gift },
+  { id: 'bonus', label: 'Как начать в крипте с 1000₽', icon: Gift },
   { id: 'faq', label: 'FAQ', icon: HelpCircle },
   { id: 'contact', label: 'CONTACT', icon: Mail },
 ]
@@ -1099,7 +1099,24 @@ function FAQPage() {
 
 // Main App
 function App() {
-  const [activeTab, setActiveTab] = useState('latest')
+  const [activeTab, setActiveTab] = useState(() => {
+    const hash = window.location.hash.replace('#', '')
+    if (hash === 'start-crypto-1000' || hash === 'bonus') return 'bonus'
+    return 'latest'
+  })
+
+  useEffect(() => {
+    if (activeTab === 'bonus') {
+      if (window.location.hash !== '#start-crypto-1000') {
+        window.history.replaceState(null, '', '#start-crypto-1000')
+      }
+      return
+    }
+
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+    }
+  }, [activeTab])
 
   const renderContent = () => {
     switch (activeTab) {
